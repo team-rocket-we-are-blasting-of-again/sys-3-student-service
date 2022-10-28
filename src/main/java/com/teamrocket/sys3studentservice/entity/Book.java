@@ -28,13 +28,6 @@ public class Book {
     @GeneratedValue
     private Long id;
 
-    @ManyToMany(mappedBy = "books")
-    private List<Student> students = new ArrayList<>();
-
-    public void addStudent(Student student) {
-        this.students.add(student);
-    }
-
     public static Book fromDto(BookDto bookDto) {
         return Book.builder()
             .id(bookDto.getId())

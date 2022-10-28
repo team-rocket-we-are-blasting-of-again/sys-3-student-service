@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -34,12 +36,16 @@ public class Student {
     @Column(name = "credits")
     private Double credits;
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany
+    @JoinTable(
+        name = "students_books",
+        joinColumns = {@JoinColumn(name = "student_id")},
+        inverseJoinColumns = {@JoinColumn(name = "book_id")}
+    )
     private List<Book> books = new ArrayList<>();
 
     public void addBook(Book book) {
         this.books.add(book);
-        book.addStudent(this);
     }
 
     public static Student fromDto(StudentDto studentDto) {
