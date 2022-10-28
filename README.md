@@ -5,6 +5,6 @@
 Local development
 
 ```bash
-docker network create orders
+docker network create students
 docker compose -f local.docker-compose.yaml up --build
 ```
