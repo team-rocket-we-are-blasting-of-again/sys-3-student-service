@@ -3,6 +3,7 @@ package com.teamrocket.sys3studentservice.entity;
 import com.teamrocket.sys3studentservice.dto.StudentDto;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +37,7 @@ public class Student {
     @Column(name = "credits")
     private Double credits;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
         name = "students_books",
         joinColumns = {@JoinColumn(name = "student_id")},

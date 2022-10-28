@@ -1,13 +1,13 @@
 package com.teamrocket.sys3studentservice.entity;
 
-    import com.teamrocket.sys3studentservice.dto.BookDto;
-    import java.util.ArrayList;
+import static java.util.Objects.isNull;
+
+import com.teamrocket.sys3studentservice.dto.BookDto;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +25,6 @@ import lombok.Setter;
 public class Book {
 
     @Id
-    @GeneratedValue
     private Long id;
 
     public static Book fromDto(BookDto bookDto) {
@@ -35,6 +34,9 @@ public class Book {
     }
 
     public static List<Book> fromList(List<BookDto> bookDtos) {
+        if (isNull(bookDtos)) {
+            return new ArrayList<>();
+        }
         return bookDtos
             .stream()
             .map(Book::fromDto)

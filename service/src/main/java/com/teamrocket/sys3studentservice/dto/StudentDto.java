@@ -2,6 +2,7 @@ package com.teamrocket.sys3studentservice.dto;
 
 import java.util.List;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class StudentDto {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private Double credits;
 
     private List<BookDto> books;
