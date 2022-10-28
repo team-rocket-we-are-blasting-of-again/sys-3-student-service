@@ -1,9 +1,7 @@
 FROM openjdk:17-bullseye as builder
-
 WORKDIR /build
 COPY . /build/
-
-RUN ./mvnw package
+RUN ./mvnw package -Dmaven.test.skip=true
 
 FROM openjdk:17-alpine
 WORKDIR /app
