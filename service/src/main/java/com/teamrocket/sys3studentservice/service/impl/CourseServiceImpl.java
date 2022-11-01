@@ -49,14 +49,32 @@ public class CourseServiceImpl implements CourseService {
         List<BookDto> filtered = new ArrayList<>();
         for (BookDto dto : courseDto.getBooks()
              ) {
-            if(!existingBooks.stream().map(book -> {
-                return book.getId();
-            }).toList().contains(dto.getId())){
+            if(!existingBooks.stream().map(book -> book.getId()).toList().contains(dto.getId())){
                 filtered.add(dto);
             }
         }
         courseDto.setBooks(filtered);
         return existingBooks;
+    }
+
+    // Checks if given students exist, if not, add to persisted object, else add later
+    // Makes sure that given students are merged if exists, and persisted if not exist
+    private List<Student> checkStudents(CourseDto courseDto) {
+        List<Long> ids = new ArrayList<>();
+        for (StudentDto dto: courseDto.getStudents()
+        ) {
+            ids.add(dto.getId());
+        }
+        List<Student> existingStudents = studentRepository.findAllById(ids);
+        List<StudentDto> filtered = new ArrayList<>();
+        for (StudentDto dto : courseDto.getStudents()
+        ) {
+            if(!existingStudents.stream().map(student -> student.getId()).toList().contains(dto.getId())){
+                filtered.add(dto);
+            }
+        }
+        courseDto.setStudents(filtered);
+        return existingStudents;
     }
 
     @Override
@@ -105,7 +123,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public IDDto<Long> updateCourse(CourseDto courseDto) {
-        Course course = courseRepository.save(Course.fromDto(courseDto));
+        Course course = courseRepository.findById(courseDto.getId())
+                .orElseThrow(NotFoundException::new);
+        List<Student> existingStudents = checkStudents(courseDto);
+        course.setStudents(Student.fromList(courseDto.getStudents()));
+        course.addStudents(existingStudents);
+        List<Book> existingBooks = checkBooks(courseDto);
+        course.setBooks(Book.fromList(courseDto.getBooks()));
+        course.addBooks(existingBooks);
         return new IDDto<>(course.getId());
     }
 }

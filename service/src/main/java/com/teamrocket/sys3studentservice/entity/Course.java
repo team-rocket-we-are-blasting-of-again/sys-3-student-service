@@ -54,4 +54,10 @@ public class Course {
             this.addBook(book);
         }
     }
+    public void addStudents(List<Student> existingStudents) {
+        for (Student student: existingStudents
+        ) {
+            this.addStudent(student);
+        }
+    }
 }
