@@ -5,13 +5,22 @@ package com.teamrocket;
 option java_multiple_files = true;
 
 service BookPurchaseService {
-  rpc purchaseBook(BookToBuy) returns (BoughtBook);
+  rpc purchaseBook(BookToBuy) returns (BoughtBookReply);
 }
 
 message BookToBuy {
   int64 bookId = 1;
   double price = 2;
   int64 studentId = 3;
+}
+
+message BoughtBookReply {
+  int64 boughtBookId = 1;
+  repeated Recommendation recommendations = 2;
+}
+
+message Recommendation {
+  int64 id = 1;
 }
 
 message BoughtBook {
