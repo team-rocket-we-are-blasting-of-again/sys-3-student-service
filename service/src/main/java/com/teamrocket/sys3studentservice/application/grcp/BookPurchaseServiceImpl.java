@@ -23,7 +23,7 @@ public class BookPurchaseServiceImpl extends BookPurchaseServiceImplBase {
 
     private final StudentService studentService;
     private final CourseService courseService;
-    private final KafkaTemplate<String, IDDto<Long>> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public void purchaseBook(BookToBuy request, StreamObserver<BoughtBookReply> responseObserver) {
@@ -38,7 +38,7 @@ public class BookPurchaseServiceImpl extends BookPurchaseServiceImplBase {
              ) {
             recommendationsReply.add(Recommendation.newBuilder().setId((Long) dto.getId()).build());
         }
-        kafkaTemplate.send("bookBought", bookBought);
+        kafkaTemplate.send("bookBought", String.valueOf(bookDto.getId()));
         BoughtBookReply reply = BoughtBookReply.newBuilder()
                 .setBoughtBookId(bookBought.getId())
                 .addAllRecommendations(recommendationsReply)
