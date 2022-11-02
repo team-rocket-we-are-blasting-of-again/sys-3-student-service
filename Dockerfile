@@ -3,7 +3,7 @@ WORKDIR /build
 COPY . /build/
 RUN ./mvnw package -Dmaven.test.skip=true
 
-FROM openjdk:17-alpine
+FROM openjdk:17-bullseye
 WORKDIR /app
 COPY --from=builder /build/service/target/*.jar /app/application.jar
 
