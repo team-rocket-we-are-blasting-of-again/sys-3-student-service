@@ -44,4 +44,11 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
         return new IDDto<>(id);
     }
+
+    @Override
+    public boolean studentHasFunds(Long studentId, double price) {
+        Student student = studentRepository.findById(studentId)
+            .orElseThrow(NotFoundException::new);
+        return student.getCredits() >= price;
+    }
 }

@@ -4,8 +4,16 @@ package com.teamrocket;
 
 option java_multiple_files = true;
 
+import "google/protobuf/wrappers.proto";
+
 service BookPurchaseService {
   rpc purchaseBook(BookToBuy) returns (BoughtBookReply);
+  rpc studentHasFunds(StudentInfo) returns (google.protobuf.BoolValue);
+}
+
+message StudentInfo {
+  int64 studentId = 1;
+  double price = 2;
 }
 
 message BookToBuy {

@@ -10,6 +10,10 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic bookBoughtTopic() {
-        return TopicBuilder.name("bookBought").build();
+        return TopicBuilder
+            .name("bookBought")
+            .replicas(4)
+            .partitions(4)
+            .build();
     }
 }

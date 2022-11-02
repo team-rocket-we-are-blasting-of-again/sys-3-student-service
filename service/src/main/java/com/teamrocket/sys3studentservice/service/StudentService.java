@@ -11,4 +11,5 @@ public interface StudentService {
     IDDto<Long> addBookToStudent(Long studentId, BookDto bookDto);
     IDDto<Long> deleteStudent(Long id);
 
+    boolean studentHasFunds(Long studentId, double price);
 }
