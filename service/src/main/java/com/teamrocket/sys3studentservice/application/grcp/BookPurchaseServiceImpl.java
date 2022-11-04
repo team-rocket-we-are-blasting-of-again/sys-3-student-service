@@ -29,28 +29,35 @@ public class BookPurchaseServiceImpl extends BookPurchaseServiceImplBase {
 
     @Override
     public void purchaseBook(BookToBuy request, StreamObserver<BoughtBookReply> responseObserver) {
-        BookDto bookDto =
+        try {
+            BookDto bookDto =
                 BookDto.builder().id(request.getBookId()).price(request.getPrice()).build();
-        IDDto<Long> bookBought = studentService.addBookToStudent(request.getStudentId(), bookDto);
-        List<IDDto<Long>> recommendations = courseService.getRecommendations(bookBought.getId());
-        List<Recommendation> recommendationsReply = new ArrayList<>();
-        for (IDDto<Long> dto : recommendations) {
-            recommendationsReply.add(Recommendation.newBuilder().setId((Long) dto.getId()).build());
-        }
-        kafkaTemplate.send("bookBought", String.valueOf(bookDto.getId()));
-        BoughtBookReply reply = BoughtBookReply.newBuilder().setBoughtBookId(bookBought.getId())
+            IDDto<Long> bookBought = studentService.addBookToStudent(request.getStudentId(), bookDto);
+            List<IDDto<Long>> recommendations = courseService.getRecommendations(bookBought.getId());
+            List<Recommendation> recommendationsReply = new ArrayList<>();
+            for (IDDto<Long> dto : recommendations) {
+                recommendationsReply.add(Recommendation.newBuilder().setId((Long) dto.getId()).build());
+            }
+            kafkaTemplate.send("bookBought", String.valueOf(bookDto.getId()));
+            BoughtBookReply reply = BoughtBookReply.newBuilder().setBoughtBookId(bookBought.getId())
                 .addAllRecommendations(recommendationsReply).build();
-        responseObserver.onNext(reply);
+            responseObserver.onNext(reply);
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        } finally {
+            responseObserver.onCompleted();
+        }
     }
 
     @Override
     public void studentHasFunds(StudentInfo request, StreamObserver<BoolValue> responseObserver) {
         try {
-            boolean hasFunds =
-                    studentService.studentHasFunds(request.getStudentId(), request.getPrice());
+            boolean hasFunds = studentService.studentHasFunds(request.getStudentId(), request.getPrice());
             responseObserver.onNext(BoolValue.of(hasFunds));
         } catch (Exception e) {
             responseObserver.onError(e);
+        } finally {
+            responseObserver.onCompleted();
         }
     }
 }

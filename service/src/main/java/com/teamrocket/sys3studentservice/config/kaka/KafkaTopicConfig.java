@@ -12,8 +12,6 @@ public class KafkaTopicConfig {
     public NewTopic bookBoughtTopic() {
         return TopicBuilder
             .name("bookBought")
-            .replicas(4)
-            .partitions(4)
             .build();
     }
 }
